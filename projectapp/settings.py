@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url 
+import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,12 +139,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
 #STATIC_ROOT = 'BASE_DIR / static'
 STATIC_URL = '/static/'
 STATICFILES_DIR = 'BASE_DIR /static'
 
 #STATIC_ROOT = 'BASE_DIR / static/'
-STATIC_ROOT = 'BASE_DIR / static_files'
+#STATIC_ROOT = 'BASE_DIR / staticfiles'
 #STATIC_URL = '/static/'
 #STATICFILES_DIR = 'BASE_DIR /static/'
 #STATICFILES_DIR = os.path.join(BASE_DIR, 'static/')
@@ -161,3 +165,5 @@ CART_SESSION_ID = 'cart'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'store:dashboard'
+
+django_heroku.settings(locals())
