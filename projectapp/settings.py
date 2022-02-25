@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'ox*#o^kt&7bcf&-_4%6d)l1%7@9q#*(9jdowfys3_ck$d6rhpq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['b96c-102-91-4-117.ngrok.io', 'localhost', 'seamlessbuy.com']
+ALLOWED_HOSTS = ['seamlessbuy.herokuapp.com', 'localhost', 'seamlessbuy.com']
 
 #gmail smtp
 EMAIL_HOST = 'smtp.gmail.com'
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,9 +140,9 @@ USE_TZ = True
 STATIC_ROOT = 'BASE_DIR / static/'
 STATIC_URL = '/static/'
 
-#STATICFILES_DIR = 'BASE_DIR /static/'
-#STATICFILES_DIR = os.path.join(BASE_DIR, 'static/')
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIR = 'BASE_DIR /static/'
+STATICFILES_DIR = os.path.join(BASE_DIR, 'static/')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'BASE_DIR / media'

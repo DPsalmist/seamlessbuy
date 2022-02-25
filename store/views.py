@@ -271,7 +271,7 @@ def contact(request):
     
         # Extra email details
         #subject = 'A New Message From SeamlessBuy Store'
-        contact_message = f'Hello Samuel, \n\n' \
+        contact_message = f'New Message From SeamlessBuy, \n\n' \
                 f'You have a message from {fullname} with details below. \n\n' \
                 f'Phone Number: {phone_no} \n\n' \
                 f'Message: {message}.'
@@ -282,7 +282,7 @@ def contact(request):
             headers={'Reply-To': contact_email})
         email_msg.send()
         messages.success(request, f'Thank you for contacting us! We\'ll get back to you soon.')
-        return redirect ('shop:home_list')
+        return redirect ('store:product_list')
     return render(request, 'store/product/contact.html', context)
 
 def about(request):
