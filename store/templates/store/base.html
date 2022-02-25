@@ -97,7 +97,9 @@
                                     </li>
                                     <li>
                                         {% if user.is_authenticated %}
-                                            <span>Hello {{ user }} </span>|
+                                            <span>
+                                                Hello {{ user }} |
+                                            </span>
                                             <a href="{% url 'store:dashboard' %}">Dashboard</a>
                                         {% else %}
                                             <a href="#signin-modal" data-toggle="modal">Sign in / Sign up</a>

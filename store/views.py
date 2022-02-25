@@ -11,6 +11,7 @@ from .forms import ReviewForm
 from django.conf import settings
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
+from account.forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
@@ -99,7 +100,7 @@ def search_result(request):
         'product_count':product_count
     }
     return render(request, 'store/product/search_results.html', context)
-  
+   
   
 @login_required  
 def dashboard(request):
@@ -111,14 +112,21 @@ def dashboard(request):
     customer_loans = Loan.objects.filter(owner_id=user.id).order_by('-created')
     print('user loan', customer_loans)
     customer_loan_count = customer_loans.count()
-    #current_customer = get_object_or_404(Customer, user=user.id)
-    #current_customer = get_object_or_404(User, user=user.username)
-    #if current_customer == '':
-        #print('User is not a customer')
-    #else:
-        #print(f'Current user {current_customer} is a customer')
     customer_orders = Order.objects.filter(customer__id__exact=user.id).order_by('-date_ordered')
     customer_order_count = customer_orders.count()
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            print('Profile updated successfully!')
+            return redirect ('store:dashboard')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
     if customer_orders == '':
         print('User hasn\'t made any order')
     else:
@@ -138,10 +146,11 @@ def dashboard(request):
     
     context = {
         'user':user,
+        'u_form':u_form,
+        'p_form':p_form,
         'categories':categories,
         'customer_loans':customer_loans,
         'customer_loan_count':customer_loan_count,
-        #'current_customer':current_customer,
         'customer_order_count':customer_order_count,
         'customer_orders':customer_orders,
         'billing_address':billing_address

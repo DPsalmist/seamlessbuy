@@ -1,0 +1,54 @@
+{% extends 'store/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+{% if category %}{{ category.name }}{% else %}My Profile{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{% static 'assets/images/page-header-bg.jpg' %})">
+        <div class="container">
+            <h1 class="page-title">My Account<span>Dashboard</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="content-section  ml-5">
+        <h3>Profile page</h3>
+        <hr>
+        <div class="media">
+            <img src="{{ user.profile.image.url }}" class="rounded-circle account-img">
+            <div class="media-body">
+                <h2 class="accoubt-heading">{{ user.username }}</h2>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div>
+        </div>
+        <!-- Form here -->
+        <form method="POST" enctype="multipart/form-data">
+            <!-- cross site request forfery token for security against attacks -->
+            {% csrf_token %}
+            <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Profile Info</legend>
+                {{ u_form | crispy }} 
+                {{ p_form | crispy }} 
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-primary" type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+{% endblock content %}%

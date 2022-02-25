@@ -7,6 +7,7 @@ urlpatterns = [
     #path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('logout/', auth_views.LogoutView.as_view(template_name='account/logout.html'), name='logout'),
     path('register/', views.register, name='register'),
+    #path('profile/', views.profile, name='profile'),
     # change password urls
     path('password_change/', auth_views.PasswordChangeView.as_view(
         template_name='account/password_change_form.html'),name='password_change'),

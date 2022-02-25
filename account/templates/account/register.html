@@ -1,5 +1,6 @@
 {% extends "store/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}Create an account{% endblock %}
 {% block content %}
@@ -12,7 +13,7 @@
             <hr>
             <p>Please, sign up using the following form:</p>
             <form method="post">
-                {{ user_form.as_p }}
+                {{ user_form|crispy }}
                 {% csrf_token %}
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="register-policy" required>
@@ -20,7 +21,8 @@
                         <a href="#">privacy policy</a> *
                     </label>
                 <hr>
-                <p><input type="submit" value="Create my account"></p>
+                <p><input type="submit" class="btn btn-outline" value="Create my account"></p>
+                <span class="small">Already have an account? <a href="{% url 'login' %}">Click here</a> to login.</span>
             </div><!-- End .custom-checkbox -->
             </form>
         </div>

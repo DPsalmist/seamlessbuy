@@ -1,5 +1,6 @@
 import json
 from .models import *
+from django.utils.encoding import force_str
 
 def cookieCart(request):
     

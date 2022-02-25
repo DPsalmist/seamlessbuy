@@ -24,6 +24,8 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('order.urls', namespace='orders')),
     path('', include('store.urls', namespace='store')),
+    #social auth
+    #path('social-auth/', include('social_django.urls', namespace='social')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -49,12 +49,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store',
-    'account',
+    'account.apps.AccountConfig' ,
     'coupons',
     'order',
     'cart',
     'crispy_forms',
-    
+    #'social_django'
 ]
 
 MIDDLEWARE = [
@@ -151,8 +151,8 @@ STATIC_ROOT = 'BASE_DIR / static_files'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'BASE_DIR / media'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+#MEDIA_ROOT = 'BASE_DIR / media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

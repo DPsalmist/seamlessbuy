@@ -1,5 +1,6 @@
 {% extends 'store/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 {% if category %}{{ category.name }}{% else %}Dashboard{% endif %}
@@ -26,6 +27,14 @@
     <div class="page-content">
         <div class="dashboard">
             <div class="container">
+                <div class="media">
+                    <img style="height:50px;" src="{{ user.profile.image.url }}" class="rounded-circle account-img">
+                    <div class="media-body">
+                        <p class="account-heading">{{ user.username }}</p>
+                        <p> {{ user.email }} </p>
+                    </div>
+                </div>
+                <hr>
                 <div class="row">
                     <aside class="col-md-4 col-lg-3">
                         <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
@@ -52,6 +61,18 @@
 
                     <div class="col-md-8 col-lg-9">
                         <div class="tab-content">
+                            
+                            {% if messages %}
+                                <ul class="messages">
+                                    {% for message in messages %}
+                                        <li class="{{ message.tags }}">
+                                        {{ message|safe }}
+                                        <a href="#" class="close">x</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            
                             <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
                                 <p>Hello <span class="font-weight-normal text-dark">{{ user }}</span> (not <span class="font-weight-normal text-dark">{{ user }}</span>? <a href="{% url 'logout' %}">Log out</a>) 
                                 <br>
@@ -227,7 +248,20 @@
                             </div><!-- .End .tab-pane -->
 
                             <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-                                <form action="#">
+                                <form method="POST" enctype="multipart/form-data">
+                                    <!-- cross site request forfery token for security against attacks -->
+                                    {% csrf_token %}
+                                    <fieldset class="form-group">
+                                    <legend class="border-bottom mb-4">Profile Info</legend>
+                                        {{ u_form | crispy }} 
+                                        {{ p_form | crispy }} 
+                                    </fieldset>
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-primary" type="submit">Update Profile</button>
+                                    </div>
+                                </form>
+                                
+                                {% comment %} <form action="#">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>First Name *</label>
@@ -260,7 +294,7 @@
                                         <span>SAVE CHANGES</span>
                                         <i class="icon-long-arrow-right"></i>
                                     </button>
-                                </form>
+                                </form> {% endcomment %}
                             </div><!-- .End .tab-pane -->
                         </div>
                     </div><!-- End .col-lg-9 -->
