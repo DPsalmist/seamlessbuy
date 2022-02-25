@@ -1,0 +1,273 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if category %}{{ category.name }}{% else %}Dashboard{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{% static 'assets/images/page-header-bg.jpg' %})">
+        <div class="container">
+            <h1 class="page-title">My Account<span>Dashboard</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Account</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-3">
+                        <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Loans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+                            </li>
+                        </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+                    <div class="col-md-8 col-lg-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+                                <p>Hello <span class="font-weight-normal text-dark">{{ user }}</span> (not <span class="font-weight-normal text-dark">{{ user }}</span>? <a href="{% url 'logout' %}">Log out</a>) 
+                                <br>
+                                From your account dashboard you can track your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your 
+                                <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>,
+                                 and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
+                                 <hr>
+                                 <a href="{% url 'store:product_list' %}" class="btn btn-outline-primary-2">
+                                     <span>SHOP NOW</span><i class="icon-long-arrow-right"></i>
+                                </a>
+                            </div><!-- .End .tab-pane -->
+
+                            <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                {% if customer_order_count == 0 %}
+                                    <p>No order has been made yet.</p>
+                                {% else %}
+                                    <p>You have made a total of {{ customer_order_count }} orders.</p>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <table class="table table-cart table-mobile" style="border: 0px dashed #333">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Order No</th>
+                                                            <th>Date</th>
+                                                            <th>Transaction ID</th>
+                                                            <th>Payment Status</th>
+                                                            <th>Order Status</th>
+                                                        </tr>
+                                                    </thead>
+                        
+                                                    <tbody>
+                                                        {% for item in customer_orders %} 
+                                                                <tr>
+                                                                    <td class="product-col">
+                                                                        {{ item }}
+                                                                    </td>
+                                                                    <td class="price-col">{{ item.date_ordered }}</td>
+                                                                    <td class="quantity-col">
+                                                                        {{ item.transaction_id }}
+                                                                    </td>
+                                                                    <td class="total-col">
+                                                                        {% if item.paid %}
+                                                                            <p style="color:green">Payment approved</p>
+                                                                        {% else %}
+                                                                            <p style="color:red">Not approved</p>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                    <td class="product-col">
+                                                                        {% if item.complete == 'Pending' %}
+                                                                            <p style="color:yellow">Order Pending</p>
+                                                                        {% elif item.complete == 'Delivered' %}
+                                                                            <p style="color:green">Order Delivered</p>
+                                                                        {% else %}
+                                                                        <p style="color:red">Unapproved</p>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %} 
+                                                    </tbody>
+                                                </table><!-- End .table table-wishlist --> 
+                                            </div><!-- End .col-lg-9 -->
+                                           
+                                        </div><!-- End .row -->
+                                        <!-- Pagination -->
+                                        {% include "store/product/pagination.html" with page=customer_orders %}
+                                    </div><!-- End .container -->
+                                {% endif %}
+                                <a href="{% url 'store:product_list' %}" class="btn btn-outline-primary-2"><span>SHOP NOW</span><i class="icon-long-arrow-right"></i></a>
+                            </div><!-- .End .tab-pane -->
+
+                            <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
+                                {% if customer_loans %}
+                                <table class="table table-cart table-mobile" style="border: 0px dashed #333">  
+                                    <thead>
+                                        <tr>
+                                            <th>Loan Name</th>
+                                            <th>Verification Status</th>
+                                            <th>Payment Status:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for loan in customer_loans %}
+                                        <tr>
+                                            <td class="">
+                                                {{ loan.name }}
+                                            </td>
+                                            <td class="">
+                                                {% if loan.loan_request  == 'Unapproved' %}
+                                                    <span style="color:red">Loan Unapproved</span>
+                                                {% elif loan.loan_request == 'Pending' %}
+                                                    <span style="color:yellow">Loan Pending</span>
+                                                {% elif loan.loan_request == 'Approved' %}
+                                                    <span style="color:green">Loan Approved</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="">
+                                                {% if loan.payment_status == 'Incomplete' %}
+                                                    <span style="color:red">Loan Payment is incomplete </span>
+                                                {% else %}
+                                                    <span style="color:green">Loan Payment is complete </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                        <p>No loans available yet.</p>    
+                                {% endif %}
+                                
+                                <p>
+                                    You can get a loan to purchase different products on credit by sending the following information to us:
+                                    <ol>
+                                        <li>BVN</li>
+                                        <li>CAC documents</li>
+                                        <li>Application letter</li>
+                                        <li>Government ID</li>
+                                        <li>Passport photograph</li>
+                                        <li>Utility bill</li>
+                                        <li>Bank statement (6 months)</li>
+                                    </ol>
+                                </p>
+                                <a href="mailto:support@seamlessbuy.com"  class="btn btn-outline-primary-2"><span>Apply for Loan</span><i class="icon-long-arrow-right"></i></a>
+                            </div><!-- .End .tab-pane -->
+
+                            <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+                                <p>The following addresses will be used on the checkout page by default. You can change it later.</p>
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="card card-dashboard">
+                                            <div class="card-body">
+                                                <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+                                                {% if billing_address %}
+                                                    <p>{{ user.username }}<br>
+                                                    {{ billing_address.street }}<br>
+                                                    {{ billing_address.address }}<br>
+                                                    {{ billing_address.state }} <br>
+                                                    {{ current_customer.phone_no }}<br>
+                                                    {{ current_customer.email }}<br>
+                                                    <a href="#">Edit <i class="icon-edit"></i></a></p>
+                                                {% else %}
+                                                        <p>You don't have any billing address. Try to make an order</p>
+                                                        <hr>
+                                                        <a href="{% url 'store:product_list' %}" class="btn btn-outline-primary-2">
+                                                            <span>SHOP NOW</span><i class="icon-long-arrow-right"></i>
+                                                       </a>
+                                                {% endif %}
+                                            </div><!-- End .card-body -->
+                                        </div><!-- End .card-dashboard -->
+                                    </div><!-- End .col-lg-6 -->
+
+                                    <div class="col-lg-6">
+                                        <div class="card card-dashboard">
+                                            <div class="card-body">
+                                                <h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+                                                {% if billing_address %}
+                                                    {% for customer in billing_address  %}
+                                                    <p>{{ customer }}</p> <br>
+                                                    {{ customer.address }} <br>
+                                                    {{ customer.state }} <br>
+                                                    {{ customer.zip_code }}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <p>You have not set up this type of address yet.<br>
+                                                    <a href="#">Edit <i class="icon-edit"></i></a></p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div><!-- End .col-lg-6 -->
+                                </div><!-- End .row -->
+                            </div><!-- .End .tab-pane -->
+
+                            <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                                <form action="#">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>First Name *</label>
+                                            <input type="text" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <label>Last Name *</label>
+                                            <input type="text" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+                                    <label>Display Name *</label>
+                                    <input type="text" class="form-control" required>
+                                    <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+
+                                    <label>Email address *</label>
+                                    <input type="email" class="form-control" required>
+
+                                    <label>Current password (leave blank to leave unchanged)</label>
+                                    <input type="password" class="form-control">
+
+                                    <label>New password (leave blank to leave unchanged)</label>
+                                    <input type="password" class="form-control">
+
+                                    <label>Confirm new password</label>
+                                    <input type="password" class="form-control mb-2">
+
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>SAVE CHANGES</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
+                                </form>
+                            </div><!-- .End .tab-pane -->
+                        </div>
+                    </div><!-- End .col-lg-9 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+{% endblock content %}

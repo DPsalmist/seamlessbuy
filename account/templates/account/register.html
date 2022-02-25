@@ -1,0 +1,31 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Create an account{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="icon-box-title">Create an account</h1>
+            <hr>
+            <p>Please, sign up using the following form:</p>
+            <form method="post">
+                {{ user_form.as_p }}
+                {% csrf_token %}
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="register-policy" required>
+                    <label class="custom-control-label" for="register-policy">I agree to the 
+                        <a href="#">privacy policy</a> *
+                    </label>
+                <hr>
+                <p><input type="submit" value="Create my account"></p>
+            </div><!-- End .custom-checkbox -->
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div> 
+
+{% endblock %}

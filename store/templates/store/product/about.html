@@ -1,0 +1,189 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if category %}{{ category.name }}{% else %}About Us{% endif %}
+{% endblock %}
+
+{% block content %}
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{% static 'assets/images/page-header-bg.jpg' %})">
+        <div class="container">
+            <h1 class="page-title">About us</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                <li class="breadcrumb-item active" aria-current="page">About Us</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="about-text text-center mt-3">
+                        <h2 class="title text-center mb-2">Who We Are</h2><!-- End .title text-center mb-2 -->
+                        <p>SeamlessBuy is an e-commerce platform that offers several quality home products with different categories such as kitchens, freezers, televisions, audios, generators, etc. <br>
+                        We also offer loans to help you buy on credit and pay later seamlessly. We have several trusted finance partners who we work with to help make the process as seamless as possible for you.</p>
+                        <br><hr>
+                        <img src="{% static 'images/aboutuspic.jpeg' %}" alt="image" class="mx-auto mb-6">
+                    </div><!-- End .about-text -->
+                </div><!-- End .col-lg-10 offset-1 -->
+            </div><!-- End .row -->
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-sm-6">
+                    <div class="icon-box icon-box-sm text-center">
+                        <span class="icon-box-icon">
+                            <i class="icon-puzzle-piece"></i>
+                        </span>
+                        <div class="icon-box-content">
+                            <h3 class="icon-box-title">Quality Products</h3><!-- End .icon-box-title -->
+                            <p>You can trust our products<br>Become a vendor!</p>
+                        </div><!-- End .icon-box-content -->
+                    </div><!-- End .icon-box -->
+                </div><!-- End .col-lg-4 col-sm-6 -->
+
+                <div class="col-lg-4 col-sm-6">
+                    <div class="icon-box icon-box-sm text-center">
+                        <span class="icon-box-icon">
+                            <i class="icon-life-ring"></i>
+                        </span>
+                        <div class="icon-box-content">
+                            <h3 class="icon-box-title">Professional Support</h3><!-- End .icon-box-title -->
+                            <p>We offer top and amazing customer support, <br>You can reach out to us via the chat feature or call us on +2347082954464 <br>We respond within 30mins time.</p>
+                        </div><!-- End .icon-box-content -->
+                    </div><!-- End .icon-box -->
+                </div><!-- End .col-lg-4 col-sm-6 -->
+
+                <div class="col-lg-4 col-sm-6">
+                    <div class="icon-box icon-box-sm text-center">
+                        <span class="icon-box-icon">
+                            <i class="icon-heart-o"></i>
+                        </span>
+                        <div class="icon-box-content">
+                            <h3 class="icon-box-title">Service With Love</h3><!-- End .icon-box-title -->
+                            <p>You enjoy amazing user experience and buy seamlessly.</p> 
+                        </div><!-- End .icon-box-content -->
+                    </div><!-- End .icon-box -->
+                </div><!-- End .col-lg-4 col-sm-6 -->
+            </div><!-- End .row -->
+        </div><!-- End .container -->
+
+        <div class="mb-2"></div><!-- End .mb-2 -->
+
+        <div class="bg-image pt-7 pb-5 pt-md-12 pb-md-9" style="background-image: url({% static 'assets/images/backgrounds/bg-4.pg' %}%)">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-md-3">
+                        <div class="count-container text-center">
+                            <div class="count-wrapper text-white">
+                                <span class="count" data-from="0" data-to="200" data-speed="5000" data-refresh-interval="50">0</span>+
+                            </div><!-- End .count-wrapper -->
+                            <h3 class="count-title text-white">Happy Customer</h3><!-- End .count-title -->
+                        </div><!-- End .count-container -->
+                    </div><!-- End .col-6 col-md-3 -->
+
+                    <div class="col-6 col-md-3">
+                        <div class="count-container text-center">
+                            <div class="count-wrapper text-white">
+                                <span class="count" data-from="0" data-to="10" data-speed="5000" data-refresh-interval="50">0</span>+
+                            </div><!-- End .count-wrapper -->
+                            <h3 class="count-title text-white">Finance Partners</h3><!-- End .count-title -->
+                        </div><!-- End .count-container -->
+                    </div><!-- End .col-6 col-md-3 -->
+
+                    <div class="col-6 col-md-3">
+                        <div class="count-container text-center">
+                            <div class="count-wrapper text-white">
+                                <span class="count" data-from="0" data-to="95" data-speed="3500" data-refresh-interval="50">0</span>%
+                            </div><!-- End .count-wrapper -->
+                            <h3 class="count-title text-white">Return Clients</h3><!-- End .count-title -->
+                        </div><!-- End .count-container -->
+                    </div><!-- End .col-6 col-md-3 -->
+
+                    <div class="col-6 col-md-3">
+                        <div class="count-container text-center">
+                            <div class="count-wrapper text-white">
+                                <span class="count" data-from="0" data-to="50" data-speed="3500" data-refresh-interval="50">0</span>+
+                            </div><!-- End .count-wrapper -->
+                            <h3 class="count-title text-white">Vendors</h3><!-- End .count-title -->
+                        </div><!-- End .count-container -->
+                    </div><!-- End .col-6 col-md-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .bg-image pt-8 pb-8 -->
+        <br>
+
+        {% comment %} Partners Section {% endcomment %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="brands-text text-center mx-auto mb-6">
+                        <h2 class="title">Meet some of our premium partners and sponsors.</h2><!-- End .title -->
+                        <p>You too can become a partner or a vendor by clicking on the become a vendor link above or by 
+                            reaching out to us via our email address</p>
+                    </div><!-- End .brands-text -->
+                    <div class="brands-display">
+                        <div class="row justify-content-center">
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'images/partner1.jpeg' %}" alt="Haier Thermocool">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'images/partner2.jpeg' %}" alt="Leasehouz">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'images/partner3.png' %}" alt="Creditville">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'images/partner4.png' %}" alt="TCL partner">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            {% comment %} <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'assets/images/brands/4.png' %}" alt="Brand Name">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'assets/images/brands/5.png' %}" alt="Brand Name">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <a href="#" class="brand">
+                                    <img src="{% static 'assets/images/brands/6.png' %}" alt="Brand Name">
+                                </a>
+                            </div><!-- End .col-md-3 -->
+
+                            <div class="col-6 col-sm-4 col-md-3"> {% endcomment %}
+                                {% comment %} <a href="#" class="brand">
+                                    <img src="{% static 'assets/images/brands/9.png' %}" alt="Brand Name">
+                                </a> {% endcomment %}
+                            </div><!-- End .col-md-3 -->
+                        </div><!-- End .row -->
+                    </div><!-- End .brands-display -->
+                </div><!-- End .col-lg-10 offset-lg-1 -->
+            </div><!-- End .row -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+
+{% endblock content %}
