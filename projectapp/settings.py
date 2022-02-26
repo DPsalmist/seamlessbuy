@@ -166,4 +166,4 @@ LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'store:dashboard'
 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
