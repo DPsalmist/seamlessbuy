@@ -140,7 +140,7 @@
                             {% if cart.get_total_price == 0 %}
                                 <p> Please make an order to proceed to checkout </p>
                             {% else %}
-                                <a href="{% url 'store:checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+                                <a href="{% url 'store:process_order' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
                             {% endif %}
                         </div><!-- End .summary -->
 

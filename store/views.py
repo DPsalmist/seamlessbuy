@@ -318,10 +318,17 @@ def checkout(request):
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cart_items = order.get_cart_items
+        
+        context = {
+            'categories':categories,
+            'cart':cart,
+            'new_total':new_total,
+            'order':order, 
+            'items':items
+            }
     else:
         print('user is not logged in...')
-        return redirect('store:process_order')
-    context = {'categories':categories, 'cart':cart, 'new_total':new_total, 'order':order, 'items':items}
+        #return redirect('store:process_order')
     return render(request, 'store/product/test.html', context)
     
 
@@ -348,9 +355,13 @@ def process_order(request):
     zip_code = request.POST.get('zip_code')
     company = request.POST.get('company')
     
+    l_state=state
+    
+    print('lowercase state is', l_state)
+    
     # Get shipping cost
     print('Cart total before shipping fee:', cart_total)
-    if state.lower() in close_areas:
+    if state in close_areas:
         print(f'This order state {state} is within the close areas')
         new_total = cart_total + shipping_fee_within_close_areas
         print('New total is i.e. + 2k shipping', new_total)
@@ -381,7 +392,7 @@ def process_order(request):
     order.transaction_id = transaction_id
     
     # Test for Shipping Fee & Cart total before saving order
-    if state.lower() in close_areas and new_total ==  cart_total + shipping_fee_within_close_areas:
+    if state in close_areas and new_total ==  cart_total + shipping_fee_within_close_areas:
         print('Saving order and new total for close areas...')
         # Untill online payment is activated! It will be manual
         order.paid = False
@@ -418,7 +429,8 @@ def process_order(request):
         'order':order
         }
     print('Success! Order and Shipping Address Saved!!!')
-    return redirect('store:product_list')
+    return render(request, 'store/product/test.html', context)
+    #return redirect('store:product_list')
 
 
 def user_loan(request):
