@@ -372,19 +372,18 @@ def process_order(request):
 
     # Authenticate user
     if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        customer = request.user
+        order = Order.objects.create(customer=customer, complete='Pending', paid=False)
         items = order.orderitem_set.all()
         cart_items = order.get_cart_items
         print(f'order created. order num for this user {customer} :', order)
-        print('is a new user order created?', created)
         print(f'cart order items for user {customer}:', items.count(), items)
     else:
         print(f'user {fname} is not logged in...')
-        customer, created = Customer.objects.get_or_create(email=email)
+        customer, created = User.objects.get_or_create(email=email)
         customer.name = [fname, lname]
         customer.save()
-        order = Order.objects.create(customer=customer,complete=False) 
+        order = Order.objects.create(customer=customer,complete='Pending') 
         print('not registered user')
         print(f'cart order num for new user {customer} :', order)
         print('is a new user order created?', created)
@@ -395,16 +394,18 @@ def process_order(request):
     if state in close_areas and new_total ==  cart_total + shipping_fee_within_close_areas:
         print('Saving order and new total for close areas...')
         # Untill online payment is activated! It will be manual
-        order.paid = False
-        print('Order payment captured!', order.complete)
+        order.paid = False 
+        order.complete = 'Delivered'
+        print(f'Order {order} payment captured!', order.complete)
     else:
         print('Saving order and new total for far areas...')
         if new_total ==  cart_total + shipping_fee_outside_close_areas:
             # Untill online payment is activated! It will be manual
             order.paid = False
-        print('Order payment captured!', order.complete)
+            order.complete = 'Delivered'
     # save order    
     order.save()
+    print(f'Order {order} payment captured!!!!!', order.complete)
     
     #save items in cart and clear cart
     for item in cart:
