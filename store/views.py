@@ -7,7 +7,8 @@ from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.contrib import messages
 from django.db.models import Q
 from django.views.generic import TemplateView, ListView
-from .forms import ReviewForm, ShippingAddressCreateForm, GuestShippingAddressCreateForm
+from .forms import ReviewForm, ShippingAddressCreateForm, GuestShippingAddressCreateForm, SubscribersForm
+from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
@@ -46,10 +47,23 @@ def index(request, category_slug=None):
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
+
+    #form = SubscribersForm()
+    if request.method == 'POST':
+        sub_form = SubscribersForm(request.POST)
+        if sub_form.is_valid():
+            sub_form.save()
+            messages.success(request, f'Subscribed successfully!')
+            print('Email subscriber successful!')
+        #return render(request, 'store/product/index.html')
+        return render(request, 'store/product/subscribed.html')
+    else:
+        sub_form = SubscribersForm()
         
     context = {
         'category': category,
         'brands':brands,
+        'sub_form':sub_form,
         'featured_products':featured_products,
         'featured2_products':featured2_products,
         'premium_products':premium_products,
@@ -102,6 +116,14 @@ def search_result(request):
         'product_count':product_count
     }
     return render(request, 'store/product/search_results.html', context)
+
+
+# Order Detail via admin
+@staff_member_required
+def admin_order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request,'admin/orders/order/detail.html',{'order': order})
+
    
 # Dashboard view
 @login_required  

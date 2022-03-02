@@ -12,10 +12,10 @@
         <div class="container">
 
             <div class="checkout-discount mt-5">
-                <form method="POST" action="{% url 'store:checkout' %}">
+                <!-- <form method="POST" action="{% url 'store:checkout' %}">
                     <input type="text" class="form-control" required id="checkout-discount-input">
                     <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-                </form>
+                </form> -->
             </div>
             
             <form method="post" action="{% url 'store:checkout' %}">
@@ -66,7 +66,29 @@
                                         {% if cart.get_total_price == 0 %}
                                             <td>&#x20A6;0.00</td>
                                         {% else %}
-                                            &#x20A6;{{ cart.get_total_price }}
+                                            {% if cart.coupon %}
+                                                <tr class="subtotal">
+                                                    <tr>
+                                                       <td>
+                                                         "{{ cart.coupon.code }}" coupon applied
+                                                         ({{ cart.coupon.discount }}% off)
+                                                       </td>
+                                                       
+                                                       <td class="" style="color:red">
+                                                         minus &#x20A6;{{ cart.get_discount|floatformat:2 }}
+                                                       </td>
+                                                       <!-- <td>
+                                                            {{ cart.get_total_price_after_discount|floatformat:2 }}
+                                                        </td> -->
+                                                </tr>
+                                                <tr class="summary-subtotal">
+                                                    <td class="summary-total">Chekout Total:</td>
+                                                    <td class="summary-total">
+                                                        &#x20A6;{{cart.get_total_price_after_discount|floatformat:2 }}
+                                                    </td>
+                                                </tr><!-- End .summary-subtotal -->
+                                                {% endif %}
+
                                         </td>
                                         {% endif %}
                                     </tr><!-- End .summary-total -->
@@ -119,7 +141,9 @@
                                     <div class="card-header" id="heading-4">
                                         <h2 class="card-title">
                                             <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                                                PayPal <small class="float-right paypal-link">What is PayPal?</small>
+                                                PayPal 
+                                                <small class="float-right paypal-link">What is PayPal?
+                                                </small>
                                             </a>
                                         </h2>
                                     </div><!-- End .card-header -->

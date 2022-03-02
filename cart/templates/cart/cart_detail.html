@@ -85,16 +85,20 @@
                         </table><!-- End .table table-wishlist --> 
 
                         <div class="cart-bottom">
+                            <!-- Coupon Form -->
                             <div class="cart-discount">
-                                 <form action="{% url "coupons:apply" %}" method="post">
+                                 <form action="{% url 'coupons:apply' %}" method="post">
                                      <div class="input-group">
                                         <div class="input-group-append">
-                                         {{ coupon_apply_form }}
-                                         {% csrf_token %}
-                                         <input class="btn btn-outline-primary-2" type="submit" value="Apply"><i class="icon-long-arrow-right"></i>
-                                                                                 </div>
+                                            {{ coupon_apply_form }}
+                                            {% csrf_token %}
+                                            <br><hr>
+                                            <!-- <input class="btn btn-outline-primary-2" type="submit" value="Apply"><i class="icon-long-arrow-right"></i> -->
+                                            <button class="btn btn-outline-primary-2" type="submit" value="Apply">Apply<i class="icon-long-arrow-right"></i></button>
+                                        </div>
                                     </div>
-                               <!--  </form>
+                                </form>
+                                <!--
                                 <form action="#">
                                     <div class="input-group">
                                         <input type="text" class="form-control" required placeholder="coupon code">
@@ -142,22 +146,28 @@
                                                  {% if cart.coupon %}
                                                      <tr class="subtotal">
                                                        <td>Subtotal</td>
-                                                       <td colspan="4"></td>
                                                        <td class="num">
-                                                        {{ tot|floatformat:2 }}
+                                                        {{ cart.get_total_price|floatformat:2 }}
                                                         </td>
                                                         </tr> <tr>
                                                        <td>
                                                          "{{ cart.coupon.code }}" coupon
                                                          ({{ cart.coupon.discount }}% off)
                                                        </td>
-                                                       <td colspan="4"></td>
-                                                       <td class="num neg">
-                                                         - ${{ cart.get_discount|floatformat:2 }}
+                                                       <td class="" style="color:red">
+                                                         minus &#x20A6;{{ cart.get_discount|floatformat:2 }}
                                                        </td>
+                                                       <!-- <td>
+                                                            {{ cart.get_total_price_after_discount|floatformat:2 }}
+                                                        </td> -->
                                                 </tr>
+                                                <tr class="summary-subtotal">
+                                                    <td class="summary-total">Chekout Total:</td>
+                                                    <td>
+                                                            &#x20A6;{{cart.get_total_price_after_discount|floatformat:2 }}
+                                                    </td>
+                                                </tr><!-- End .summary-subtotal -->
                                                 {% endif %}
-                                                &#x20A6;{{ tot }}
                                         </td>
                                         {% endif %}
                                         </td>

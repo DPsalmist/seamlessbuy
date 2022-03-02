@@ -1,8 +1,41 @@
 from django.contrib import admin
-from .models import Category, Product, Brand, OrderItem, Order, Customer,\
+from .models import Category, Product, Brand, OrderItem, Order, Customer, Subscribers,\
     OrderItem, ShippingAddress, Review, Loan, GuestOrder, GuestOrderItem, GuestShippingAddress
+import csv
+import datetime
+from django.http import HttpResponse
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+
+def order_detail(obj):
+    url = reverse('store:admin_order_detail', args=[obj.id])
+    return mark_safe(f'<a href="{url}">View</a>')
+
 
 # Register your models here.
+def export_to_csv(modeladmin, request, queryset):
+    opts = modeladmin.model._meta
+    content_disposition = 'attachment; filename={opts.verbose_name}.csv'
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = content_disposition
+    writer = csv.writer(response)
+    fields = [field for field in opts.get_fields() if not \
+    field.many_to_many and not field.one_to_many]
+    # Write a first row with header information
+    writer.writerow([field.verbose_name for field in fields])
+    # Write data rows
+    for obj in queryset:
+        data_row = []
+        for field in fields:
+            value = getattr(obj, field.name)
+            if isinstance(value, datetime.datetime):
+                value = value.strftime('%d/%m/%Y')
+                data_row.append(value)
+                writer.writerow(data_row)
+    return response
+    export_to_csv.short_description = 'Export to CSV'
+
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -18,6 +51,10 @@ class BrandAdmin(admin.ModelAdmin):
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['user', 'name', 'email', 'created']
+
+@admin.register(Subscribers)
+class SubscribersAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'created']
     
 @admin.register(Loan)
 class Loan(admin.ModelAdmin):
@@ -31,10 +68,12 @@ class GuestOrderItemInline(admin.TabularInline):
 
 @admin.register(GuestOrder)
 class GuestOrderAdmin(admin.ModelAdmin):
-    list_display = ['guest_customer', 'date_ordered', 'paid', 'complete', 'transaction_id']
+    list_display = ['guest_customer', 'date_ordered', 'paid', 'complete', 'transaction_id', order_detail]
     list_filter = ['guest_customer', 'complete', 'date_ordered', 'transaction_id']
     search_fields = ('customer',)
     inlines = [GuestOrderItemInline]
+    actions = [export_to_csv]
+
 
 @admin.register(GuestOrderItem)
 class GuestOrderItemAdmin(admin.ModelAdmin):
@@ -49,10 +88,11 @@ class OrderItemInline(admin.TabularInline):
     
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'date_ordered', 'paid', 'complete', 'transaction_id']
+    list_display = ['customer', 'date_ordered', 'paid', 'complete', 'transaction_id', order_detail]
     list_filter = ['customer', 'complete', 'date_ordered', 'transaction_id']
     search_fields = ('customer',)
     inlines = [OrderItemInline]
+    actions = [export_to_csv]
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):

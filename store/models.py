@@ -12,6 +12,14 @@ class Customer(models.Model):
 	def __str__(self):
 		return str(self.name)
 
+class Subscribers(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=200, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.name)
+
 class Loan(models.Model):
     LOAN_STATUS = (
 		('Complete', 'Complete'),

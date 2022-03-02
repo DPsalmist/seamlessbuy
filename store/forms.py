@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Review, GuestShippingAddress, ShippingAddress
+from .models import Review, GuestShippingAddress, ShippingAddress, Subscribers
 
 
 # Create your forms here.
@@ -22,6 +22,11 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ('name', 'email', 'body')
+
+class SubscribersForm(forms.ModelForm):
+	class Meta:
+		model = Subscribers
+		fields = ('name', 'email')
 
 
 class ShippingAddressCreateForm(forms.ModelForm):

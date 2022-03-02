@@ -17,14 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from store import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
-    path('cart/', include('cart.urls', namespace='cart')),
     path('coupons/', include('coupons.urls', namespace='coupons')),
+    path('cart/', include('cart.urls', namespace='cart')),
     path('', include('store.urls', namespace='store')),
     path('vendor/', include('vendor.urls', namespace='vendor')),
+    path('admin/order/<int:order_id>/', views.admin_order_detail,name='admin_order_detail'),
     #social auth
     #path('social-auth/', include('social_django.urls', namespace='social')),
 ]

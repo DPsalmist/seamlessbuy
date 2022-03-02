@@ -4,6 +4,8 @@ from . import views
 app_name = 'store'
 
 urlpatterns = [
+     # admin order view
+    path('admin/order/<int:order_id>/', views.admin_order_detail,name='admin_order_detail'),
     path('', views.index, name='product_list'),
     path('contact/', views.contact, name='contact'),
     #path('search/', views.SearchResultsView.as_view(), name='search_query'),
@@ -17,4 +19,5 @@ urlpatterns = [
     path('<slug:category_slug>/', views.category_list, name='product_list_by_category'),
     path('<brand_name>/', views.brand_list, name='product_list_by_brand'),
     path('<int:id>/<slug:slug>/', views.product_detail, name='product_detail'),
+
 ]

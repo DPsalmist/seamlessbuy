@@ -1,8 +1,9 @@
 {% extends 'store/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}
-{% if category %}{{ category.name }}{% else %}SeamlessBuy |Home Page{% endif %}
+{% if category %}{{ category.name }}{% else %} SeamlessBuy | Buy quality home gadgets and enjoy amazing rewards anytime, anyday in Nigeria.{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -705,6 +706,7 @@
         </div><!-- End .container -->
     </div><!-- End .icon-boxes-container -->
 
+    <!-- Social Media/Email Subscriber -->
     <div class="container">
         <div class="cta cta-separator cta-border-image cta-half mb-0" style="background-image: url({% static 'assets/images/demos/demo-3/bg-2.jpg' %});">
             <div class="cta-border-wrapper bg-white">
@@ -726,15 +728,32 @@
                         <div class="cta-wrapper text-center">
                             <h3 class="cta-title">Get the Latest Deals</h3><!-- End .cta-title -->
                             <p class="cta-desc">and <br>receive <span class="text-primary">%5 coupon</span> for your first shopping</p><!-- End .cta-desc -->
+
+
+                            <form action="" method="post">
+                                <div class="">
+                                    {% if form.errors %}
+                                        <p>Please fill the form correctly.</p>
+                                    {% else %}
+                                        <p>Please, fill the form correctly.</p>
+                                    {% endif %}
+                                    <hr>
+                                    {% csrf_token %}
+                                    {{ sub_form|crispy }}
+                                    <input type="submit" class="btn btn-primary btn-rounded icon-long-arrow-right" value="Submit">
+                                </div>
+                            </form>
+            
                     
-                            <form action="#">
+<!--                             <form action="#">
                                 <div class="input-group">
                                     <input type="email" class="form-control" placeholder="Enter your Email Address" aria-label="Email Adress" required>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary btn-rounded" type="submit"><i class="icon-long-arrow-right"></i></button>
-                                    </div><!-- .End .input-group-append -->
-                                </div><!-- .End .input-group -->
-                            </form>
+                                    </div>
+                                </div>
+                            </form> -->
+
                         </div><!-- End .cta-wrapper -->
                     </div><!-- End .col-lg-6 -->
                 </div><!-- End .row -->
