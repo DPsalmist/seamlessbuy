@@ -1,0 +1,445 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{% if category %}{{ category.name }}{% else %}Checkout{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="checkout">
+        <div class="container">
+
+            <div class="checkout-discount mt-5">
+                <form method="POST" action="{% url 'store:checkout' %}">
+                    <input type="text" class="form-control" required id="checkout-discount-input">
+                    <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                </form>
+            </div>
+            
+            <form method="post" action="{% url 'store:checkout' %}">
+                <div class="row">
+                    <div class="col-lg-9" id="user-info">
+                        {{ form|crispy }}
+                        {% csrf_token %}
+                        <p><input type="submit" class="btn btn-outline-primary-2 btn-order btn-block" value="Place order"></p>
+                    </div>
+                    <!-- End .col-lg-9 -->
+
+                    {% comment %} Final Checkout Details {% endcomment %}
+                    <aside class="col-lg-3">
+                        <div class="summary">
+                            <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in cart %}
+                                    <tr>
+                                        <td><a href="#">{{ order.product.name }}</a></td>
+                                        <td>&#x20A6;{{ order.product.price }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td>&#x20A6;{{ cart.get_total_price }}</td>
+                                    </tr><!-- End .summary-subtotal -->
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        {% if cart %}
+                                        <td>
+                                            <p>&#x20A6;2000 for orders within Lagos <br><br> &#x20A6;3000 for orders outside Lagos. </p>
+                                        </td>
+                                        {% else %}
+                                        <td>&#x20A6;0.00</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td>
+                                        {% if cart.get_total_price == 0 %}
+                                            <td>&#x20A6;0.00</td>
+                                        {% else %}
+                                            &#x20A6;{{ cart.get_total_price }}
+                                        </td>
+                                        {% endif %}
+                                    </tr><!-- End .summary-total -->
+                                    
+                                </tbody>
+                            </table><!-- End .table table-summary -->
+                            <hr>
+
+                            {% comment %} Payment Info Section {% endcomment %}
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-1">
+                                        <h2 class="checkout-title">Select Method Of Payment</h2><!-- End .checkout-title -->
+                                        <h2 class="card-title">
+                                            <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                Direct bank transfer
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Make your payment directly into our bank account. Please use your <b>Order Transaction ID</b> (see dashboad) as the payment reference or the narrative reference. 
+                                            Your order will not be shipped until the funds have cleared in our account.
+                                        <hr>
+                                        <ul>
+                                            <li>Acount Name: Sterling Crest Global Services </li>
+                                            <li>Bank: UBA </li>
+                                            <li>Account Number: 1022382633</li>
+                                        </ul>
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                Cash on delivery
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            We also accept payment on delivery. You'll have to log in to your dashboard
+                                            to track the status of ypur order. Once your order is delivered and cash payment is made, it's reflected on your dashboard.  
+                                        </div>
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-4">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                PayPal <small class="float-right paypal-link">What is PayPal?</small>
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            PayPal is an electronic commerce company that facilitates payments between parties through
+                                            online funds transfers. Coming Soon...
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-5">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                                Credit Card (Online Payment)
+                                                <img src="{% static 'images/payments-summary.png' %}" alt="payments cards">
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                        <div class="card-body"> Coming soon. We're working steadfastly on this mode of payment. 
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                
+                            </div><!-- End .accordion -->
+                            <button id="form-button" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Make Payment</span>
+                            </button>
+                            </div><!-- End .card -->
+                        </div><!-- End .accordion -->
+
+                        
+                        </div><!-- End .summary -->
+                    </aside><!-- End .col-lg-3 -->
+                </div> <!-- End of row -->
+            </form>
+            
+                    </div><!-- End .container -->
+    </div><!-- End .checkout -->
+</div>
+
+<script type="text/javascript">
+    var user = '{{request.user}}'
+    var form = document.getElementById('form')
+    // hide payment form
+    document.getElementById("payment-info").style.display = "none";
+
+    // Form details
+    form.addEventListener('submit', function(e){
+        e.preventDefault()
+        document.getElementById('proceed').innerHTML = ''
+        document.getElementById('payment-info').style.display = "block";
+        //document.getElementById('payment-info').classList.remove('hidden')
+        console.log('Checkout Form submitted...')
+        console.log('Create account is', create_acct)
+    })
+
+    // Using Ajax to send the data to backend
+    // Call user form when payment butoom is clicked
+    document.getElementById('payment-button').addEventListener('click', function (e){
+        submitFormData()
+    })
+
+    function submitFormData(){
+        console.log('Payment button clicked!')
+        
+        var userFormData = {
+            'fname':null,
+            'lname': null,
+            'city':null,
+            'state':null,
+            'email':null,
+            'address':null,
+            'phone_no':null,
+            'zip_code':null,
+            'company':null,
+            'total':total
+        }
+            console.log('default data value:', userFormData)
+        
+            // Get form data
+            if (user == 'AnonymousUser'){
+                userFormData.fname = form.fname.value
+                userFormData.lname = form.lname.value
+                userFormData.city = form.city.value
+                userFormData.state = form.state.value
+                userFormData.email = form.email.value
+                userFormData.address = form.address.value
+                userFormData.phone_no = form.phone_no.value
+                userFormData.company = form.company.value
+                shippingInfo.zip_code = form.zip_code.value
+
+            }
+            var shippingInfo = {
+                'address':null,
+                'city':null,
+                'state':null,
+                'phone_no':null,
+                'zip_code':null,
+            }
+            
+        console.log('user info:', userFormData)
+
+         // Redirect after successful payment
+        var url = '/process_order/'
+        fetch (url, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken':csrftoken,
+            },
+            body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo})
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success', data)
+            alert('Transaction completed!');
+            window.location.href = "{% url 'store:product_list' %}"
+        })
+    }
+
+</script>
+
+{% endblock content %}
+
+  <form action="{% url 'store:process_order' %}" method="POST" id="form">
+                <h2 class="checkout-title">Order Billing Details</h2><!-- End .checkout-title -->
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-9" id="user-info">
+                            {{ form.non_field_errors }}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="{{ form.customer }}">First Name *</label>
+                                    <input name="fname" type="text" class="form-control" required>
+                                </div><!-- End .col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <label>Last Name *</label>
+                                    <input name="lname" type="text" class="form-control" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+
+                            <label>Company Name (Optional)</label>
+                            <input name="company" type="text" class="form-control">
+
+                            <label>State *</label>
+                            <input name="state" type="text" class="form-control" required>
+
+                            <label>Street address *</label>
+                            <input name="address" type="text" class="form-control" placeholder="House number and Street name" required />
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Town / City *</label>
+                                    <input name="city" type="text" class="form-control" required>
+                                </div><!-- End .col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <label>Postcode / Zip *</label>
+                                    <input name="zip_code" type="text" class="form-control" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Email address *</label>
+                                    <input name="email" type="email" class="form-control" required>
+                                </div><!-- End .col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <label>Phone *</label>
+                                    <input name="phone_no" type="tel" class="form-control" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" name="create_account" value="true" class="custom-control-input" id="checkout-create-acc">
+                                <label class="custom-control-label" for="checkout-create-acc">Create an account?</label>
+                            </div><!-- End .custom-checkbox -->
+
+                            <label>Order notes (optional)</label>
+                            <textarea class="form-control" name="notes" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+                            <br>
+                            {% comment %} <input id="form-button" type="submit" value="Send" class="btn btn-outline-primary-2 btn-order btn-block" > {% endcomment %}
+                    </div>
+                    <!-- End .col-lg-9 -->
+
+                    {% comment %} Final Checkout Details {% endcomment %}
+                    <aside class="col-lg-3">
+                        <div class="summary">
+                            <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in cart %}
+                                    <tr>
+                                        <td><a href="#">{{ order.product.name }}</a></td>
+                                        <td>&#x20A6;{{ order.product.price }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td>&#x20A6;{{ cart.get_total_price }}</td>
+                                    </tr><!-- End .summary-subtotal -->
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        {% if cart %}
+                                        <td>
+                                            <p>&#x20A6;2000 for orders within Lagos <br><br> &#x20A6;3000 for orders outside Lagos. </p>
+                                        </td>
+                                        {% else %}
+                                        <td>&#x20A6;0.00</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td>
+                                        {% if cart.get_total_price == 0 %}
+                                            <td>&#x20A6;0.00</td>
+                                        {% else %}
+                                            &#x20A6;{{ new_total }}
+                                        </td>
+                                        {% endif %}
+                                    </tr><!-- End .summary-total -->
+                                    
+                                </tbody>
+                            </table><!-- End .table table-summary -->
+                            <hr>
+
+                            {% comment %} Payment Info Section {% endcomment %}
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-1">
+                                        <h2 class="checkout-title">Select Method Of Payment</h2><!-- End .checkout-title -->
+                                        <h2 class="card-title">
+                                            <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                Direct bank transfer
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Make your payment directly into our bank account. Please use your <b>Order Transaction ID</b> (see dashboad) as the payment reference or the narrative reference. 
+                                            Your order will not be shipped until the funds have cleared in our account.
+                                        <hr>
+                                        <ul>
+                                            <li>Acount Name: Sterling Crest Global Services </li>
+                                            <li>Bank: UBA </li>
+                                            <li>Account Number: 1022382633</li>
+                                        </ul>
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                Cash on delivery
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            We also accept payment on delivery. You'll have to log in to your dashboard
+                                            to track the status of ypur order. Once your order is delivered and cash payment is made, it's reflected on your dashboard.  
+                                        </div>
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-4">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                PayPal <small class="float-right paypal-link">What is PayPal?</small>
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            PayPal is an electronic commerce company that facilitates payments between parties through
+                                            online funds transfers. Coming Soon...
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-5">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                                Credit Card (Online Payment)
+                                                <img src="{% static 'images/payments-summary.png' %}" alt="payments cards">
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                        <div class="card-body"> Coming soon. We're working steadfastly on this mode of payment. 
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                
+                            </div><!-- End .accordion -->
+                            <button id="form-button" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Make Payment</span>
+                            </button>
+                            </div><!-- End .card -->
+                        </div><!-- End .accordion -->
+
+                        
+                        </div><!-- End .summary -->
+                    </aside><!-- End .col-lg-3 -->
+                </div><!-- End .row -->
+            </form>

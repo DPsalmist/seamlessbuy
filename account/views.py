@@ -36,7 +36,7 @@ def register(request):
             return redirect ('login')
     else:
         form = form
-    return render(request, 'account/register.html', {'user_form':form})
+    return render(request, 'account/register.html', {'user_form':form, 'categories':categories})
 
 def logoutUser(request):
     logout(request)
@@ -60,6 +60,7 @@ def profile(request):
 	context = {
 	'u_form':u_form,
 	'p_form':p_form,
+	'categories':categories
 	}
 	return render(request, 'store/dashboard.html', context)
 	

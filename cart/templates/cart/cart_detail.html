@@ -86,14 +86,23 @@
 
                         <div class="cart-bottom">
                             <div class="cart-discount">
+                                 <form action="{% url "coupons:apply" %}" method="post">
+                                     <div class="input-group">
+                                        <div class="input-group-append">
+                                         {{ coupon_apply_form }}
+                                         {% csrf_token %}
+                                         <input class="btn btn-outline-primary-2" type="submit" value="Apply"><i class="icon-long-arrow-right"></i>
+                                                                                 </div>
+                                    </div>
+                               <!--  </form>
                                 <form action="#">
                                     <div class="input-group">
                                         <input type="text" class="form-control" required placeholder="coupon code">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-                                        </div><!-- .End .input-group-append -->
-                                    </div><!-- End .input-group -->
-                                </form>
+                                        </div>
+                                    </div>
+                                </form> -->
                             </div><!-- End .cart-discount -->
 
                             {% comment %} <a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a> {% endcomment %}
@@ -130,6 +139,24 @@
                                             {% if tot == 0 %}
                                                 <td>&#x20A6;0.00</td>
                                             {% else %}
+                                                 {% if cart.coupon %}
+                                                     <tr class="subtotal">
+                                                       <td>Subtotal</td>
+                                                       <td colspan="4"></td>
+                                                       <td class="num">
+                                                        {{ tot|floatformat:2 }}
+                                                        </td>
+                                                        </tr> <tr>
+                                                       <td>
+                                                         "{{ cart.coupon.code }}" coupon
+                                                         ({{ cart.coupon.discount }}% off)
+                                                       </td>
+                                                       <td colspan="4"></td>
+                                                       <td class="num neg">
+                                                         - ${{ cart.get_discount|floatformat:2 }}
+                                                       </td>
+                                                </tr>
+                                                {% endif %}
                                                 &#x20A6;{{ tot }}
                                         </td>
                                         {% endif %}
@@ -140,7 +167,7 @@
                             {% if cart.get_total_price == 0 %}
                                 <p> Please make an order to proceed to checkout </p>
                             {% else %}
-                                <a href="{% url 'store:process_order' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+                                <a href="{% url 'store:checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
                             {% endif %}
                         </div><!-- End .summary -->
 

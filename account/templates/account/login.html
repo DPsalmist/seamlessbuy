@@ -22,7 +22,9 @@
                     {{ form|crispy }}
                 <input type="hidden" name="next" value="{{ next }}" />
                 <p><input type="submit" class="btn btn-outline" value="Log-in"></p>
+                <span class="small">Don't have an account? <a href="{% url 'register' %}">Click here</a> to sign up.</span>
                 </form>
+                <br>
                 <p><a class="forgot-link" href="{% url "password_reset" %}">Forgot your password?</a></p>
             </div>
         </div>

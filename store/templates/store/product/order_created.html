@@ -1,0 +1,21 @@
+{% extends "store/base.html" %}
+{% block title %}
+  Vendor Application Successful | Thank you
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h2>Thank you for your patronage</h2>
+            <br>
+           <p>
+            Your order has been successfully completed. Your order number is
+            <strong>{{ order.id }}</strong>. Your order reference is <strong>{{ order.transaction_id }}</strong>
+          </p>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+{% endblock %}

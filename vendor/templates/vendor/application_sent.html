@@ -1,0 +1,20 @@
+{% extends "store/base.html" %}
+   {% block title %}
+     Vendor Application Successful | Thank you
+   {% endblock %}
+   {% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="icon-box-title">Thank you</h1>
+            <br>
+             <p>
+              Hello {{ user.username }}! Your application has been successfully submitted. 
+              We'll get back to you shortly via your email.
+            </p>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+{% endblock %}

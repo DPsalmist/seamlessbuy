@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{% block title %}SeamlessBuy | Home Page{% endblock %}</title>
+    <title>{% block title %}SeamlessBuy | Buy seamlessly and enjoy home gadgets{% endblock %}</title>
     <meta name="description" content="Seamlessbuy provides you with the platform to get home appliances either by outright sale or
     by buying now and paying later. We also offer swap services as you can swap your gadget for a better one with just a little addition.">
     <meta name="keywords" content="Seamless Buy, Home furniures and appliances, cheap home products, electronics">
@@ -133,7 +133,7 @@
                                 <div class="header-search-wrapper search-wrapper-wide">
                                     <label for="q" class="sr-only">Search</label>
                                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search products, brands, categories ..." required>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
@@ -239,7 +239,7 @@
                                     <a href="{% url 'store:product_list' %}" class="sf-with-ul">Home</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="sf-with-ul">Become a vendor</a>
+                                    <a href="{% url 'vendor:vendor-application' %}" class="sf-with-ul">Become a vendor</a>
                                 </li>
                                 <li>
                                     <a href="#" class="sf-with-ul">About</a>

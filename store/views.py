@@ -1,5 +1,5 @@
-from ast import NotIn
-from itertools import product
+#from ast import NotIn
+#from itertools import product
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse, Http404
 from .models import *
@@ -7,14 +7,16 @@ from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.contrib import messages
 from django.db.models import Q
 from django.views.generic import TemplateView, ListView
-from .forms import ReviewForm
+from .forms import ReviewForm, ShippingAddressCreateForm, GuestShippingAddressCreateForm
 from django.conf import settings
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 from account.forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate
+from vendor.models import Vendor
 from cart.cart import Cart
 import json, datetime
 
@@ -28,10 +30,10 @@ def index(request, category_slug=None):
     brands = Brand.objects.all()
     products = Product.objects.filter(available=True)
     # Filters
-    products = Product.objects.filter(available=True).order_by('created')[:12]
+    products = Product.objects.filter(available=True).order_by('created')[:15]
     # products > 150
     premium_products = Product.objects.filter(available=True, price__gte=150000.00).order_by('-created')[0:4]
-    featured_products = Product.objects.filter(available=True).order_by('-created')[2:6]
+    featured_products = Product.objects.filter(available=True).order_by('-created')[3:7]
     featured2_products = Product.objects.filter(available=True).order_by('created')[5:9]
     # products < 150k
     hot_products = Product.objects.filter(available=True, price__lte=150000.00)[:2]
@@ -101,13 +103,17 @@ def search_result(request):
     }
     return render(request, 'store/product/search_results.html', context)
    
-  
+# Dashboard view
 @login_required  
 def dashboard(request):
     user = request.user
     print(f'user id: {user.id} and the user name is {user.username}')
     cart = Cart(request)
     categories = Category.objects.all()
+    vendor = Vendor.objects.filter(user=user)
+    vendor_store_count = vendor.count()
+    user_profile = user.profile
+    print('This vendor has this profile:', user_profile.bank)
     # get user loans
     customer_loans = Loan.objects.filter(owner_id=user.id).order_by('-created')
     print('user loan', customer_loans)
@@ -134,7 +140,7 @@ def dashboard(request):
     billing_address = ShippingAddress.objects.filter(customer__id__exact=user.id)
     print('user address:', billing_address)
     
-     # Pagination
+    # Pagination
     page = request.GET.get('page')
     paginator = Paginator(customer_orders, 5)
     try:
@@ -148,6 +154,9 @@ def dashboard(request):
         'user':user,
         'u_form':u_form,
         'p_form':p_form,
+        'vendor':vendor,
+        'user_profile':user_profile,
+        'vendor_store_count':vendor_store_count,
         'categories':categories,
         'customer_loans':customer_loans,
         'customer_loan_count':customer_loan_count,
@@ -163,6 +172,8 @@ def product_detail(request, id, slug):
     new_arrivals = Product.objects.all().order_by('-created')[0:6]
     new_deals = Product.objects.all().order_by('price')[:2]
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
+    product_review = Review.objects.filter(product=product)
+    product_review_count = product_review.count()
     brands = Brand.objects.all()
     products = Product.objects.filter(available=True)
     
@@ -193,7 +204,8 @@ def product_detail(request, id, slug):
         'cart_product_form': cart_product_form,
         'review_form':review_form,
         'reviews':reviews,
-        'new_review':new_review
+        'new_review':new_review,
+        'product_review_count':product_review_count
     }
     return render(request, 'store/product/detail.html', context)
 
@@ -306,133 +318,175 @@ def faqs(request):
     return render(request, 'store/product/faqs.html', context)
 
 def checkout(request):
-    print('this is the test view')
+    print('this is the checkout test view')
     categories = Category.objects.all()
+    customer = request.user
+    guest_customer = 'Guest customer'
     cart = Cart(request)
+    close_areas = ['lagos','ogun','ibadan', 'oyo', 'Lagos', 'Ogun', 'Oyo', 'Ibadan',
+                    'LAGOS', 'OGUN', 'IBADAN', 'OYO']
     cart_total = cart.get_total_price()
-    shipping_fee = 2000
-    new_total = cart_total + shipping_fee
-    
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cart_items = order.get_cart_items
-        
-        context = {
-            'categories':categories,
-            'cart':cart,
-            'new_total':new_total,
-            'order':order, 
-            'items':items
-            }
-    else:
-        print('user is not logged in...')
-        #return redirect('store:process_order')
-    return render(request, 'store/product/test.html', context)
-    
-
-def process_order(request):
-    categories = Category.objects.all()
-    cart = Cart(request)
-    cart_total = cart.get_total_price()
-    close_areas = ['lagos','ogun','ibadan', 'oyo']
-    shipping_fee_within_close_areas = 2000
-    shipping_fee_outside_close_areas = 3000
+    close_area_shipping_fee = 2000
+    far_area_shipping_fee = 3000
     transaction_id = datetime.datetime.now().timestamp()
-    data = request.POST.copy()
-    #data.pop('csrfmiddlewaretoken')
-    data = data.values
+    new_total = cart_total
 
-    # Get form values
-    fname = request.POST.get('fname')
-    lname = request.POST.get('lname')
-    city = request.POST.get('city')
-    state = request.POST.get('state')
-    email = request.POST.get('email')
-    address = request.POST.get('address')
-    phone_no = request.POST.get('phone_no')
-    zip_code = request.POST.get('zip_code')
-    company = request.POST.get('company')
-    
-    l_state=state
-    
-    print('lowercase state is', l_state)
-    
-    # Get shipping cost
-    print('Cart total before shipping fee:', cart_total)
-    if state in close_areas:
-        print(f'This order state {state} is within the close areas')
-        new_total = cart_total + shipping_fee_within_close_areas
-        print('New total is i.e. + 2k shipping', new_total)
-    else:
-        print(f'order {state} is outside close areas')
-        new_total = cart_total + shipping_fee_outside_close_areas
-        print('New total is i.e. 3k shipping', new_total)
+    if request.method == 'POST':
+        if customer.is_authenticated:
+            print('Authenticated user')
+            form = ShippingAddressCreateForm(request.POST)
+            if form.is_valid():
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                address = form.cleaned_data['address']
+                state = form.cleaned_data['state']
+                city =  form.cleaned_data['city']
+                zipcode = form.cleaned_data['zipcode']
+                # save shipping address
+                order_shipping_address = form.save()
+                print('state is', state)
+                # estimate shipping fee
+                if state in close_areas:
+                    print(f'The state is within the close areas & the total is {cart_total}!')
+                    new_total = cart_total + close_area_shipping_fee
+                    print(f'The state is within the close areas and new total cost is {new_total}!')
+                    order = Order.objects.create(customer=customer, complete='Pending', paid=False)
+                    # store transaction id    
+                    order.transaction_id = transaction_id
+                    items = order.orderitem_set.all()
+                    cart_items = order.get_cart_items
+                    print('Saving order and new total for close areas...')
+                    # Untill online payment is activated! It will be manual
+                    order.paid = False 
+                    order.complete = 'Delivered'
+                    print(f'Order {order} payment captured!', order.complete)
+                    # save order    
+                    order.save()
+                    print(f'Registered User Order {order} payment captured!!!!!-{order.complete}')
+                    for item in cart:
+                           OrderItem.objects.create(order=order,product=item['product'],quantity=item['quantity'])
+                    # clear the cart
+                    cart.clear()
+                else:
+                    print(f'The state is outisde the close areas & the total is {cart_total}!')
+                    new_total = cart_total + far_area_shipping_fee
+                    print(f'Saving order and new total for far areas is {new_total}')
+                    # Untill online payment is activated! It will be manual
+                    #order, created = Order.objects.get_or_create(customer=customer, complete='Pending', paid=False)
+                    order = Order.objects.create(customer=customer, complete='Pending', paid=False)
+                    # store transaction id    
+                    order.transaction_id = transaction_id
+                    items = order.orderitem_set.all()
+                    cart_items = order.get_cart_items
+                    print('Saving order and new total for close areas...')
+                    # Untill online payment is activated! It will be manual
+                    order.paid = False 
+                    order.complete = 'Delivered'
+                    print(f'Order {order} payment captured!', order.complete)
+                    # save order    
+                    order.save()
+                    print(f'Registered User Order {order} payment captured!!!!!-{order.complete}')
+                    for item in cart:
+                           OrderItem.objects.create(order=order,product=item['product'],quantity=item['quantity'])
+                    # clear the cart
+                    cart.clear()
 
-    # Authenticate user
-    if request.user.is_authenticated:
-        customer = request.user
-        order = Order.objects.create(customer=customer, complete='Pending', paid=False)
-        items = order.orderitem_set.all()
-        cart_items = order.get_cart_items
-        print(f'order created. order num for this user {customer} :', order)
-        print(f'cart order items for user {customer}:', items.count(), items)
-    else:
-        print(f'user {fname} is not logged in...')
-        customer, created = User.objects.get_or_create(email=email)
-        customer.name = [fname, lname]
-        customer.save()
-        order = Order.objects.create(customer=customer,complete='Pending') 
-        print('not registered user')
-        print(f'cart order num for new user {customer} :', order)
-        print('is a new user order created?', created)
-    # store transaction id    
-    order.transaction_id = transaction_id
-    
-    # Test for Shipping Fee & Cart total before saving order
-    if state in close_areas and new_total ==  cart_total + shipping_fee_within_close_areas:
-        print('Saving order and new total for close areas...')
-        # Untill online payment is activated! It will be manual
-        order.paid = False 
-        order.complete = 'Delivered'
-        print(f'Order {order} payment captured!', order.complete)
-    else:
-        print('Saving order and new total for far areas...')
-        if new_total ==  cart_total + shipping_fee_outside_close_areas:
-            # Untill online payment is activated! It will be manual
-            order.paid = False
-            order.complete = 'Delivered'
-    # save order    
-    order.save()
-    print(f'Order {order} payment captured!!!!!', order.complete)
-    
-    #save items in cart and clear cart
-    for item in cart:
-        OrderItem.objects.create(order=order,product=item['product'], quantity=item['quantity'])
-    cart.clear()
-    #save shipping info
-    if order:
-        ShippingAddress.objects.create(
-		customer=customer,
-		order=order,
-		address=address,
-		city=city,
-		state=state,
-		zipcode=zip_code,
-		)
-    print(f'Shipping Address saved for {customer}')
-    
-    context = {
-        'categories':categories, 
-        'cart':cart,
-        'new_total':new_total, 
-        'order':order
-        }
-    print('Success! Order and Shipping Address Saved!!!')
-    return render(request, 'store/product/test.html', context)
-    #return redirect('store:product_list')
+                if order:
+                    ShippingAddress.objects.create(first_name=first_name, last_name=last_name,
+                        customer=customer,order=order, address=address,
+                        city=city,state=state,zipcode=zipcode)
+                print(f'Registered Shipping Address saved for {customer}')
 
+                return render(request,'store/product/order_created.html', {'order': order})
+        else:
+            form = GuestShippingAddressCreateForm(request.POST)
+            if form.is_valid():
+                print('User not logged in i.e. a guest user!!!!!')
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                email = form.cleaned_data['email']
+                address = form.cleaned_data['address']
+                state = form.cleaned_data['state']
+                city =  form.cleaned_data['city']
+                zipcode = form.cleaned_data['zipcode']
+                # save shipping address
+                order_shipping_address = form.save()
+                customer, created = Customer.objects.get_or_create(email=email,)
+                #customer.save()  
+                #customer = Customer.objects.create(email=email)
+                customer.name = first_name
+                customer.save()  
+                print('state is', state)
+                # estimate shipping fee
+                if state in close_areas:
+                    print(f'The state is within the close areas & the total is {cart_total}!')
+                    new_total = cart_total + close_area_shipping_fee
+                    print(f'The state is within the close areas and new total cost is {new_total}!')
+                    order = GuestOrder.objects.create(guest_customer=customer, complete='Pending', paid=False)
+                    # store transaction id    
+                    order.transaction_id = transaction_id
+                    #items = order.orderitem_set.all()
+                    #cart_items = order.get_cart_items
+                    print('Saving order and new total for close areas...')
+                    # Untill online payment is activated! It will be manual
+                    order.paid = False 
+                    order.complete = 'Delivered'
+                    print(f'Order {order} payment captured!', order.complete)
+                    # save order    
+                    order.save()
+                    print(f'Registered User Order {order} payment captured!!!!!-{order.complete}')
+                    for item in cart:
+                           GuestOrderItem.objects.create(order=order,product=item['product'],quantity=item['quantity'])
+                    # clear the cart
+                    cart.clear()
+                else:
+                    print(f'The state is outisde the close areas & the total is {cart_total}!')
+                    new_total = cart_total + far_area_shipping_fee
+                    print(f'Saving order and new total for far areas is {new_total}')
+                    # Untill online payment is activated! It will be manual
+                    #order, created = Order.objects.get_or_create(customer=customer, complete='Pending', paid=False)
+                    order = GuestOrder.objects.create(guest_customer=customer, complete='Pending', paid=False)
+                    # store transaction id    
+                    order.transaction_id = transaction_id
+                    #items = order.orderitem_set.all()
+                    #cart_items = order.get_cart_items
+                    print('Saving order and new total for far state...')
+                    # Untill online payment is activated! It will be manual
+                    order.paid = False 
+                    order.complete = 'Delivered'
+                    print(f'Order {order} payment captured!', order.complete)
+                    # save order    
+                    order.save()
+                    print(f'Registered User Order {order} payment captured!!!!!-{order.complete}')
+                    for item in cart:
+                           GuestOrderItem.objects.create(order=order,product=item['product'],quantity=item['quantity'])
+                    # clear the cart
+                    cart.clear()
+                # save shipping address of guest user
+                if order:
+                    GuestShippingAddress.objects.create(first_name=first_name, last_name=last_name,
+                        order=order, address=address,
+                        city=city,state=state,zipcode=zipcode)
+                print(f'Registered Shipping Address saved for {customer}')
+                return render(request,'store/product/order_created.html', {'order': order})
+    else:
+        print('Form not correct or not a post request!!!')
+        form = ShippingAddressCreateForm()
+    return render(request,'store/product/order_test.html',{'cart': cart, 'form': form, 'categories':categories})
+    
+
+@require_POST
+def shipping_state(request):
+    form = ShippingAddress(request.POST)
+    if form.is_valid():
+        state = form.cleaned_data['state']
+        try:
+            user_state = state
+            request.session['user_state'] = user_state
+        except state.DoesNotExist:
+            request.session['user_state'] = None
+    return redirect('store:checkout')
+    
 
 def user_loan(request):
     user = request.user

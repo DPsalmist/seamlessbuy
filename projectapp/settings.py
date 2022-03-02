@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'store',
     'account.apps.AccountConfig' ,
     'coupons',
-    'order',
     'cart',
+    'vendor',
     'crispy_forms',
     #'social_django'
 ]
@@ -159,7 +159,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 CART_SESSION_ID = 'cart'
 
 LOGIN_URL = 'login'

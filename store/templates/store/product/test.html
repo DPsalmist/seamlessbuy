@@ -18,7 +18,7 @@
                 </form>
             </div><!-- End .checkout-discount -->
 
-            <form action="{% url 'store:process_order' %}" method="POST" id="form">
+            <form action="{% url 'store:checkout' %}" method="POST" id="form">
                 <h2 class="checkout-title">Order Billing Details</h2><!-- End .checkout-title -->
                 {% csrf_token %}
                 <div class="row">
@@ -120,7 +120,7 @@
                                         {% if cart.get_total_price == 0 %}
                                             <td>&#x20A6;0.00</td>
                                         {% else %}
-                                            &#x20A6;{{ new_total }}
+                                            &#x20A6;{{ cart.get_total_price }}
                                         </td>
                                         {% endif %}
                                     </tr><!-- End .summary-total -->
@@ -213,6 +213,7 @@
                     </aside><!-- End .col-lg-3 -->
                 </div><!-- End .row -->
             </form>
+            
             </div>
         </div><!-- End .container -->
     </div><!-- End .checkout -->

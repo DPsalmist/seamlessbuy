@@ -16,6 +16,8 @@ class Profile(models.Model):
 	bank = models.CharField(max_length=30, default='State Your Bank')
 	phone_no = models.CharField(max_length=30, default=0)
 	address = models.TextField(max_length=150, default='my address')
+	city = models.CharField(max_length=30, default='your city')
+	state = models.CharField(max_length=30, default='your state')
 	account_no = models.CharField(max_length=30,  default=000)
 	
 

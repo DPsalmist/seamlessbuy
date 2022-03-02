@@ -22,8 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('cart/', include('cart.urls', namespace='cart')),
-    path('orders/', include('order.urls', namespace='orders')),
+    path('coupons/', include('coupons.urls', namespace='coupons')),
     path('', include('store.urls', namespace='store')),
+    path('vendor/', include('vendor.urls', namespace='vendor')),
     #social auth
     #path('social-auth/', include('social_django.urls', namespace='social')),
 ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Category, Product, Brand, OrderItem, Order, Customer, \
-    OrderItem, ShippingAddress, Review, Loan
+from .models import Category, Product, Brand, OrderItem, Order, Customer,\
+    OrderItem, ShippingAddress, Review, Loan, GuestOrder, GuestOrderItem, GuestShippingAddress
 
 # Register your models here.
 
@@ -23,18 +23,26 @@ class CustomerAdmin(admin.ModelAdmin):
 class Loan(admin.ModelAdmin):
     list_display = ['owner', 'name', 'loan_request', 'payment_status', 'created']
 
+# Guest Users Orders
+# Registered Users Orders
+class GuestOrderItemInline(admin.TabularInline):
+    model = GuestOrderItem
+    raw_id_fields = ['product']
 
-@admin.register(ShippingAddress)
-class ShippingAddressAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'order', 'address', 'state', 'zipcode', 'date_added']
-    list_filter = ['customer', 'order', 'state', 'date_added']
-    search_fields = ('customer', 'state')
+@admin.register(GuestOrder)
+class GuestOrderAdmin(admin.ModelAdmin):
+    list_display = ['guest_customer', 'date_ordered', 'paid', 'complete', 'transaction_id']
+    list_filter = ['guest_customer', 'complete', 'date_ordered', 'transaction_id']
+    search_fields = ('customer',)
+    inlines = [GuestOrderItemInline]
 
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
+@admin.register(GuestOrderItem)
+class GuestOrderItemAdmin(admin.ModelAdmin):
     list_display = ['product', 'order', 'quantity', 'date_added']
     list_filter = ['product', 'order', 'date_added']
 
+
+# Registered Users Orders
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['product']
@@ -46,6 +54,12 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('customer',)
     inlines = [OrderItemInline]
 
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['product', 'order', 'quantity', 'date_added']
+    list_filter = ['product', 'order', 'date_added']
+
+# Product Details
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'price','available', 'created', 'updated']
@@ -57,4 +71,21 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['product', 'name', 'email', 'body', 'created']
+    list_filter = ['product']
     
+@admin.register(ShippingAddress)
+class ShippingAddressAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', 'customer', 'order', 'address', 'state', 'zipcode', 'order_note', 'date_added']
+    list_filter = ['customer', 'first_name', 'order', 'state', 'date_added']
+    search_fields = ('customer', 'state')
+
+# Guest Shipping Address
+@admin.register(GuestShippingAddress)
+class GuestShippingAddressAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', 'order', 'address', 'state', 'zipcode', 'date_added']
+    list_filter = ['first_name', 'order', 'state', 'date_added']
+    search_fields = ('first_name', 'state')
+
+
+
+

@@ -48,10 +48,13 @@
                                 <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Loans</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" id="tab-store-link" data-toggle="tab" href="#tab-store" role="tab" aria-controls="tab-store" aria-selected="false">Stores</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Profile Details</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
@@ -73,6 +76,7 @@
                                 </ul>
                             {% endif %}
                             
+                            <!-- Intro Dashboard -->
                             <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
                                 <p>Hello <span class="font-weight-normal text-dark">{{ user }}</span> (not <span class="font-weight-normal text-dark">{{ user }}</span>? <a href="{% url 'logout' %}">Log out</a>) 
                                 <br>
@@ -85,6 +89,7 @@
                                 </a>
                             </div><!-- .End .tab-pane -->
 
+                            <!-- Orders Dashboard -->
                             <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
                                 {% if customer_order_count == 0 %}
                                     <p>No order has been made yet.</p>
@@ -144,6 +149,7 @@
                                 <a href="{% url 'store:product_list' %}" class="btn btn-outline-primary-2"><span>SHOP NOW</span><i class="icon-long-arrow-right"></i></a>
                             </div><!-- .End .tab-pane -->
 
+                            <!-- Loan Dashboard -->
                             <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
                                 {% if customer_loans %}
                                 <table class="table table-cart table-mobile" style="border: 0px dashed #333">  
@@ -199,6 +205,55 @@
                                 <a href="mailto:support@seamlessbuy.com?subject=Loan Application"  class="btn btn-outline-primary-2"><span>Apply for Loan</span><i class="icon-long-arrow-right"></i></a>
                             </div><!-- .End .tab-pane -->
 
+                            <!-- Vendor dashboard -->
+                              <div class="tab-pane fade" id="tab-store" role="tabpanel" aria-labelledby="tab-store-link">
+                                {% if vendor_store_count > 0 %}
+                                <p>Wow! You have a total of {{ vendor_store_count }} stores.</p>
+                                <table class="table table-cart table-mobile" style="border: 0px dashed #333">  
+                                    <thead>
+                                        <tr>
+                                            <th>Business name</th>
+                                            <th>Verification status</th>
+                                            <th>Number of products</th>
+                                            <th>State</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for store in vendor %}
+                                        <tr>
+                                            <td class="">
+                                                {{ store.business_name }}
+                                            </td>
+                                            <td class="">
+                                                {% if store.verification  == 'Unapproved' %}
+                                                    <span style="color:red">Application Unapproved</span>
+                                                {% elif store.verification == 'Pending' %}
+                                                    <span style="color:yellow">Application Pending</span>
+                                                {% elif store.verification == 'Approved' %}
+                                                    <span style="color:green">Application Approved</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="">
+                                                {{ store.product_quantity }}
+                                            </td>
+                                            <td class="">
+                                                {{ store.store_state }}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                    <p>
+                                        You are not yet a vendor <br>    
+                                        Own a store? and looking to make your products available on our site, you can become a vendor by filling the application form.
+                                    </p>
+                                {% endif %}
+                                <a href="{% url 'vendor:vendor-application' %}"  class="btn btn-outline-primary-2"><span>Become a vendor</span><i class="icon-long-arrow-right"></i></a>
+                            </div><!-- .End .tab-pane -->
+
+
+                            <!-- Shipping/Billing Dashboard -->
                             <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                                 <p>The following addresses will be used on the checkout page by default. You can change it later.</p>
 
@@ -206,17 +261,20 @@
                                     <div class="col-lg-6">
                                         <div class="card card-dashboard">
                                             <div class="card-body">
-                                                <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+                                                <h3 class="card-title">Billing Info</h3><!-- End .card-title -->
                                                 {% if billing_address %}
-                                                    <p>{{ user.username }}<br>
-                                                    {{ user.street }}<br>
-                                                    {{ user.address }}<br>
-                                                    {{ user.state }} <br>
-                                                    {{ user.phone_no }}<br>
-                                                    {{ user.email }}<br>
-                                                    <a href="#">Edit <i class="icon-edit"></i></a></p>
+                                                    <p>
+                                                        Username: {{ user.username }}<br>
+                                                        Tel: {{ user_profile.phone_no }}<br>
+                                                        Street Address: {{ user_profile.address }}<br>
+                                                        Account no: {{ user_profile.account_no }}<br>
+                                                        Bank: {{ user_profile.bank }}<br>
+                                                    </p>
+                                                    <!--  <a href="#">Edit <i class="icon-edit"></i></a></p> -->
                                                 {% else %}
-                                                        <p>You don't have any billing address. Try to make an order</p>
+                                                        <p>
+                                                            You don't have any billing address. Try to make an order.
+                                                        </p>
                                                         <hr>
                                                         <a href="{% url 'store:product_list' %}" class="btn btn-outline-primary-2">
                                                             <span>SHOP NOW</span><i class="icon-long-arrow-right"></i>
@@ -231,13 +289,12 @@
                                             <div class="card-body">
                                                 <h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
                                                 {% if billing_address %}
-                                                    {{ billing_address.count }} shipping address
-                                                    {% comment %} {% for customer in billing_address  %}
-                                                    <p>{{ customer }}</p> <br>
-                                                    {{ customer.address }} <br>
-                                                    {{ customer.state }} <br>
-                                                    {{ customer.zip_code }}
-                                                    {% endfor %} {% endcomment %}
+                                                    You have made deliveries to a total of {{ billing_address.count }} address(es).
+                                                    <hr>
+                                                    Your primary shipping address is:<br>
+                                                        Street Address: {{ user_profile.address }}<br>
+                                                        City: {{ user_profile.city }} <br>
+                                                        State: {{ user_profile.state }}<br>
                                                 {% else %}
                                                     <p>You have not set up this type of address yet.<br>
                                                     <a href="#">Edit <i class="icon-edit"></i></a></p>
@@ -248,6 +305,7 @@
                                 </div><!-- End .row -->
                             </div><!-- .End .tab-pane -->
 
+                            <!-- User Profile Dashboard -->
                             <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
                                 <form method="POST" enctype="multipart/form-data">
                                     <!-- cross site request forfery token for security against attacks -->

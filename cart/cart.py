@@ -10,6 +10,8 @@ class Cart(object):
     cart = self.session.get(settings.CART_SESSION_ID)
     # store current applied coupon
     self.coupon_id = self.session.get('coupon_id')
+    # store current shipping state
+    self.shiping_state = self.session.get('user_state')
     if not cart:
       # save an empty cart in the session
       cart = self.session[settings.CART_SESSION_ID] = {}
@@ -87,3 +89,27 @@ class Cart(object):
 
   def get_total_price_after_discount(self):
         return self.get_total_price() - self.get_discount()
+
+  @property
+  def shipping(self):
+    close_areas = ['lagos', 'oyo', 'ogun', 'ibadan', 'Lagos', 'Ogun', 'Oyo']
+    close_area_shipping_fee = 2000
+    if self.shipping_state:
+      try:
+        if self.shipping_state in close_areas.lower():
+          print('The user state is in the close areas')
+        else:
+          print('User state is outside close areas. Shipping fee is now 3k')
+      except self.shipping_state == '':
+        pass
+    return None
+
+  def get_total_price_after_shipping(self):
+    close_areas = ['lagos', 'oyo', 'ogun', 'ibadan', 'Lagos', 'Ogun', 'Oyo']
+    close_area_shipping_fee = 2000
+    if self.shiping_state in close_areas.lower():
+      return self.get_total_price + shipping_fee_within_close_areas
+    else:
+      return self.get_total_price + 3000
+
+  

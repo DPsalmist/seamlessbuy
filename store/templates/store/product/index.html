@@ -47,7 +47,7 @@
                                         </span>
                                     </div><!-- End .intro-price -->
 
-                                    <a href="{{ 'register' }}" class="btn btn-primary btn-round">
+                                    <a href="{% url 'register' %}" class="btn btn-primary btn-round">
                                         <span>Apply now</span>
                                         <i class="icon-long-arrow-right"></i>
                                     </a>
@@ -75,7 +75,7 @@
                                         </span>
                                     </div><!-- End .intro-price -->
 
-                                    <a href="category.html" class="btn btn-primary btn-round">
+                                    <a href="{% url 'register' %}" class="btn btn-primary btn-round">
                                         <span>Apply now</span>
                                         <i class="icon-long-arrow-right"></i>
                                     </a>
@@ -189,12 +189,13 @@
                             <h3 class="product-title"><a href="">{{ feature_prod.name }}</a></h3><!-- End .product-title -->
                             <div class="product-price">
                                 &#x20A6;{{ feature_prod.price }}
+                                <span class="out-text">In Stock</span>
                             </div><!-- End .product-price -->
                             <div class="ratings-container">
                                 <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                    <div class="ratings-val" style="width: 87%;"></div><!-- End .ratings-val -->
                                 </div><!-- End .ratings -->
-                                <span class="ratings-text">( 5 Reviews )</span>
+<!--                                 <span class="ratings-text">( 5 Reviews )</span> -->
                             </div><!-- End .rating-container -->
                         </div><!-- End .product-body -->
                     </div><!-- End .product -->
@@ -251,12 +252,13 @@
                             <h3 class="product-title"><a href="product.html">{{ new_deals.name }}</a></h3><!-- End .product-title -->
                             <div class="product-price">
                                 &#x20A6;{{ new_deals.price }}
+                                <span class="out-text">In Stock</span>
                             </div><!-- End .product-price -->
                             <div class="ratings-container">
                                 <div class="ratings">
-                                    <div class="ratings-val" style="width: 70%;"></div><!-- End .ratings-val -->
+                                    <div class="ratings-val" style="width: 75%;"></div><!-- End .ratings-val -->
                                 </div><!-- End .ratings -->
-                                <span class="ratings-text">( 11 Reviews )</span>
+<!--                                 <span class="ratings-text">( 11 Reviews )</span> -->
                             </div><!-- End .rating-container -->
                         </div><!-- End .product-body -->
                     </div><!-- End .product -->
@@ -315,9 +317,9 @@
                             </div><!-- End .product-price -->
                             <div class="ratings-container">
                                 <div class="ratings">
-                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                    <div class="ratings-val" style="width: 88%;"></div><!-- End .ratings-val -->
                                 </div><!-- End .ratings -->
-                                <span class="ratings-text">( 3 Reviews )</span>
+<!--                                 <span class="ratings-text">( 3 Reviews )</span> -->
                             </div><!-- End .rating-container -->
                         </div><!-- End .product-body -->
                     </div><!-- End .product -->
@@ -342,7 +344,7 @@
                             </div><!-- End .cta-heading -->
                             
                             <div class="cta-text">
-                                <p>Get <span class="text-dark font-weight-normal">FREE SHIPPING & 5% discounts</span> on <br>every order with SeamlessBuy rewards program</p>
+                                <p>Get <span class="text-dark font-weight-normal">FREE SHIPPING on orders above &#x20A6;500,000</span> <br>Enjoy 10% discount on <br>every order with SeamlessBuy rewards program</p>
                             </div><!-- End .cta-text -->
                             <a href="#" class="btn btn-primary btn-round"><span>Check New Deals</span><i class="icon-long-arrow-right"></i></a>
                         </div><!-- End .cta-content -->
@@ -381,9 +383,9 @@
                             {% comment %} <a href="" class="btn btn-link"><span>Shop Now</span><i class="icon-long-arrow-right"></i></a> {% endcomment %}
                         </div><!-- End .deal-content --> 
 
-                        <div class="deal-bottom">
-                            <div class="deal-countdown" data-until="+4h"></div><!-- End .deal-countdown -->
-                        </div><!-- End .deal-bottom -->
+<!--                       <div class="deal-bottom">
+                            <div class="deal-countdown" data-until="+4h"></div> 
+                        </div>  --> <!-- End .deal-countdown -->
                     </div><!-- End .deal --> {% endfor %}
                 </div><!-- End .col-lg-6 -->
                 <div class="col-lg-6">
@@ -393,8 +395,8 @@
                             <div class="col-6">
                                 <div class="product product-2">
                                     <figure class="product-media">
-                                        <span class="product-label label-circle label-top">Top</span>
-                                        <span class="product-label label-circle label-sale">Sale</span>
+                                        <span class="product-label label-circle label-top">Hot</span>
+                                        <span class="product-label label-circle label-sale">Deals</span>
                                         <a href="{{ deal.get_absolute_url }}">
                                             <img style="height:200px;" src="{{ deal.image.url }}" alt="Product image" class="product-image">
                                         </a>
@@ -413,14 +415,14 @@
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="#">{{ deal.name }}</a></h3><!-- End .product-title -->
                                         <div class="product-price">
-                                            <span class="new-price">N{{ deal.price }}</span>
+                                            <span class="new-price">&#x20A6;{{ deal.price }}</span>
                                             {% comment %} <span class="old-price">Was N</span> {% endcomment %}
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             {% comment %} <div class="ratings">
-                                                <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                <div class="ratings-val" style="width: 90%;"></div><!-- End .ratings-val -->
                                             </div><!-- End .ratings --> {% endcomment %}
-                                            <span class="ratings-text">( 5 Reviews )</span>
+<!--                                             <span class="ratings-text">( 5 Reviews )</span> -->
                                         </div><!-- End .rating-container -->
                                     </div><!-- End .product-body -->
                                 </div><!-- End .product -->
@@ -456,9 +458,9 @@
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             <div class="ratings">
-                                                <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                                <div class="ratings-val" style="width: 77%;"></div><!-- End .ratings-val -->
                                             </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 4 Reviews )</span>
+                                            <!-- <span class="ratings-text">( 4 Reviews )</span> -->
                                         </div><!-- End .rating-container -->
                                     </div><!-- End .product-body -->
                                 </div><!-- End .product -->
@@ -476,11 +478,15 @@
 
     {% comment %} Partners/Sponsors Section {% endcomment %}
     <div class="container">
-        <div class="owl-carousel mt-5 mb-5 owl-simple" data-toggle="owl" 
+       <!--  <div class="row" style="border: 1px dashed red;"> -->
+            <!-- 
+            <div class="col-lg-2"></div>
+ -->         <!-- <div class="col-lg-8" style="border: 2px dashed blue;"> -->
+            <div class="owl-carousel mt-5 mb-5 owl-simple" data-toggle="owl" 
                 data-owl-options='{
                     "nav": false, 
                     "dots": false,
-                    "margin": 30,
+                    "margin": 40,
                     "loop": false,
                     "responsive": {
                         "0": {
@@ -501,30 +507,26 @@
                     }
                 }'>
                 <a href="#" class="brand">
-                    <img src="{% static 'images/partner1.jpeg' %}" alt="Haier Thermocool">
+                    <img style="width:;" src="{% static 'images/partner1.jpeg' %}" alt="Haier Thermocool">
                 </a>
 
                 <a href="#" class="brand">
-                    <img src="{% static 'images/partner2.jpeg' %}" alt="Leasehouz">
+                    <img style="width:;" src="{% static 'images/partner2.jpeg' %}" alt="Leasehouz">
                 </a>
 
                 <a href="#" class="brand">
-                    <img src="{% static 'images/partner3.png' %}" alt="Creditville">
+                    <img style="width:;"  src="{% static 'images/partner3.png' %}" alt="Creditville">
                 </a>
 
                 <a href="#" class="brand">
-                    <img src="{% static 'images/partner4.png' %}" alt="TCL partner">
+                    <img style="width:;" src="{% static 'images/partner4.png' %}" alt="TCL partner">
                 </a>
+            </div>
+            <!-- </div>  --><!-- End .owl-carousel -->
+             <!-- <div class="col-lg-2"></div>
+ -->        <!-- </div>
+ -->    </div><!-- End .container -->
 
-                <a href="#" class="brand">
-                    <img src="{% static 'images/partner1.jpeg' %}" alt="Haier Thermocool">
-                </a>
-
-                <a href="#" class="brand">
-                    <img src="{% static 'images/partner3.png' %}" alt="Creditville">
-                </a>
-            </div><!-- End .owl-carousel -->
-    </div><!-- End .container -->
     <div class="container">
         <hr class="mt-3 mb-6">
     </div><!-- End .container -->
@@ -614,7 +616,7 @@
                                         {% comment %} <div class="ratings">
                                             <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
                                         </div><!-- End .ratings --> {% endcomment %}
-                                        <span class="ratings-text">(4 Reviews)</span>
+<!--                                         <span class="ratings-text">(4 Reviews)</span> -->
                                     </div><!-- End .rating-container -->
                                     
                                     <div class="product-nav product-nav-dots">
@@ -681,7 +683,7 @@
                         </span>
 
                         <div class="icon-box-content">
-                            <h3 class="icon-box-title">Get 5% Off 1 Item</h3><!-- End .icon-box-title -->
+                            <h3 class="icon-box-title">Get 10% Off 1 Order</h3><!-- End .icon-box-title -->
                             <p>when you sign up and make an order</p>
                         </div><!-- End .icon-box-content -->
                     </div><!-- End .icon-box -->
