@@ -92,29 +92,29 @@
                     <div class="intro-banners">
                         <div class="banner mb-lg-1 mb-xl-2">
                             <a href="#">
-                                <img src="{% static 'images/banner-1.jpg' %}" alt="Banner">
+                                <img style="height:120px;" src="{% static 'images/smallhero1.jpeg' %}" alt="Banner">
                             </a>
 
                             <div class="banner-content">
                                 <h4 class="banner-subtitle d-lg-none d-xl-block"><a href="#">Featured</a></h4><!-- End .banner-subtitle -->
-                                <h3 class="banner-title"><a href="#">Quality <br>Products</a></h3><!-- End .banner-title -->
+                                <h3 style="color:#fff;" class="banner-title"><a href="#">Quality <br>Products</a></h3><!-- End .banner-title -->
                                
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
 
                         <div class="banner mb-lg-1 mb-xl-2">
                             <a href="#">
-                                <img src="{% static 'images/banner-2.jpg' %}" alt="Banner">
+                                <img style="height:120px;" src="{% static 'images/smallhero2.jpeg' %}" alt="Banner">
                             </a>
                             <div class="banner-content">
-                                <h4 class="banner-subtitle d-lg-none d-xl-block"><a href="#">Featured </a></h4><!-- End .banner-subtitle -->
-                                <h3 class="banner-title"><a href="#">Black Fridays <span></span></a></h3><!-- End .banner-title -->
+                                <h4 class="banner-subtitle d-lg-none d-xl-block"><a href="#">Enjoy </a></h4><!-- End .banner-subtitle -->
+                                <h3 class="banner-title"><a href="#">Black Friday Deals <span></span></a></h3><!-- End .banner-title -->
                                 
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                         <div class="banner mb-0">
                             <a href="#">
-                                <img src="{% static 'images/banner-3.jpg' %}" alt="Banner">
+                                <img style="height:120px;" src="{% static 'images/smallhero3.jpeg' %}" alt="Banner">
                             </a>
 
                             <div class="banner-content">
@@ -735,12 +735,12 @@
                                     {% if form.errors %}
                                         <p>Please fill the form correctly.</p>
                                     {% else %}
-                                        <p>Please, fill the form correctly.</p>
+                                        <p>Subscribe to get latest promos.</p>
                                     {% endif %}
                                     <hr>
                                     {% csrf_token %}
                                     {{ sub_form|crispy }}
-                                    <input type="submit" class="btn btn-primary btn-rounded icon-long-arrow-right" value="Submit">
+                                    <input type="submit" class="btn btn-primary btn-rounded icon-long-arrow-right" value="Subscribe">
                                 </div>
                             </form>
             

@@ -166,3 +166,5 @@ LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'store:dashboard'
 
 #django_heroku.settings(locals())
+# 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
+# new token: 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
