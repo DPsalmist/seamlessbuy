@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'ox*#o^kt&7bcf&-_4%6d)l1%7@9q#*(9jdowfys3_ck$d6rhpq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['seamlessbuy.herokuapp.com', 'localhost', 'seamlessbuy.com']
 
